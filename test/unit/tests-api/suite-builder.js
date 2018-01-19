@@ -407,7 +407,17 @@ describe('tests-api/suite-builder', () => {
             ]);
 
             assert.isTrue(suite.skipped[0].matches('ie11'));
-            assert.isTrue(suite.skipped[1].matches('firefox33'));
+            assert.isTrue(suite.skipped[0].matches('firefox33'));
+            assert.isFalse(suite.skipped[0].matches('chrome'));
+        });
+
+        it('should chain skip.in methods', () => {
+            suiteBuilder.skip.in('ie11')
+                .skip.in(/firefox/);
+
+            assert.isTrue(suite.shouldSkip('ie11'));
+            assert.isTrue(suite.shouldSkip('firefox33'));
+            assert.isFalse(suite.shouldSkip('chrome'));
         });
     });
 
@@ -456,19 +466,9 @@ describe('tests-api/suite-builder', () => {
                 /firefox/
             ]);
 
+            assert.isTrue(suite.skipped[0].matches('chrome'));
             assert.isFalse(suite.skipped[0].matches('ie11'));
-            assert.isFalse(suite.skipped[1].matches('firefox33'));
-            //assert.isTrue(suite.shouldSkip('chrome'));
-        });
-    });
-
-    describe('skip methods combined', () => {
-        it('should skip all browsers if skip.in and skip.notIn arguments are same', () => {
-            suiteBuilder.skip.in('chrome');
-            suiteBuilder.skip.notIn('chrome');
-
-            assert.isTrue(suite.shouldSkip('chrome'));
-            assert.isTrue(suite.shouldSkip('firefox'));
+            assert.isFalse(suite.skipped[0].matches('firefox11'));
         });
     });
 
