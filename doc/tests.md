@@ -71,21 +71,21 @@ All methods are chainable:
   (See `tolerance`option description in [config](./config.md) documentation
   for details).
 
-* `skip([browser])` — skip all tests and nested suites for:
+* `skip([browser])` or `skip.in([browser])` — skip all tests and nested suites for:
 
-  - `skip()` — all browsers;
+  - `skip.in()` — all browsers;
 
-  - `skip('id')` — browser with specified `id`;
+  - `skip.in('id')` — browser with specified `id`;
 
-  - `skip('id', comment)` — browser with specified `id` and show `comment` in the report;
+  - `skip.in('id', comment)` — browser with specified `id` and show `comment` in the report;
 
-  - `skip(/some RegExp/)` — browser with `id` which matches `/some RegExp/`;
+  - `skip.in(/some RegExp/)` — browser with `id` which matches `/some RegExp/`;
 
-  - `skip(/some RegExp/, comment)` — browser with `id` which matches `/some RegExp/` and show `comment` in the report;
+  - `skip.in(/some RegExp/, comment)` — browser with `id` which matches `/some RegExp/` and show `comment` in the report;
 
-  - `skip(['id1', /RegExp1/, ...])` — multiple browsers;
+  - `skip.in(['id1', /RegExp1/, ...])` — multiple browsers;
 
-  - `skip(['id1', /RegExp1/, ...], comment)` — multiple browsers and show `comment` in the report.
+  - `skip.in(['id1', /RegExp1/, ...], comment)` — multiple browsers and show `comment` in the report.
 
   All browsers from subsequent calls to `.skip()` are added to the skip list:
 
@@ -103,14 +103,30 @@ All methods are chainable:
       /RegExp1/
   ]);
   ```
+  
+* `skip.notIn([browser])` — skip all tests and nested suites for all browsers, except ones in the
+arguments. Accepts same arguments as `skip.in`, but with few differences:
+  - `skip.notIn()` does nothing;
+  - sequent calls
+    ```js
+      suite
+          .skip.notIn('id1')
+          .skip.notIn('id2');
+    ```
+      will not work. Multiple browsers should be listed in one method call together.
+  
+* `browsers([browser])` or `only.in([browser])` — run all tests and nested suites in specified browsers:
 
-* `browsers([browser])` — run all tests and nested suites in specified browsers:
+  - `only.in('id')` — browser with specified `id`;
 
-  - `browsers('id')` — browser with specified `id`;
+  - `only.in(/some RegExp/)` — browser `id` which matches `/some RegExp/`;
 
-  - `browsers(/some RegExp/)` — browser `id` which matches `/some RegExp/`;
-
-  - `browsers(['id1', /RegExp1/, ...])` — multiple browsers.
+  - `only.in('id1', /RegExp1/, ...)` — multiple browsers, also accepts an array as argument.
+  
+  Throws `TypeError` if no argument or empty array is passed.
+  
+* `only.notIn([browser])` — run all tests and nested suites in all browsers, except
+ones in the arguments. Accepts same arguments as `only.in`.
 
 * `capture(stateName, [options], callback(actions, find))` — defines a new
   state to capture. Optional callback describes a sequence of actions to bring
